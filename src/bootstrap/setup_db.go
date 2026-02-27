@@ -11,7 +11,7 @@ import (
 func SetupDB() *gorm.DB {
 	log.Printf("Connecting to in-memory database SQLite")
 	db, err := gorm.Open(
-		sqlite.Open("file::memory:?cache=shared"),
+		sqlite.Open("sqlite.db"),
 		&gorm.Config{},
 	)
 	if err != nil {
