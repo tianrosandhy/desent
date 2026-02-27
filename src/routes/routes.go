@@ -11,7 +11,7 @@ func InitRoutes(e *echo.Echo, app *bootstrap.Application) {
 	h := handlers.NewHandler(app)
 	e.GET("/", h.Index)
 	e.GET("/ping", h.Ping)
-	e.GET("/echo", h.Echo)
+	e.POST("/echo", h.Echo)
 
 	e.POST("/auth/token", h.Login)
 
