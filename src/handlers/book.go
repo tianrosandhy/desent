@@ -24,7 +24,10 @@ func (h *Handler) PostBook(c echo.Context) error {
 }
 
 func (h *Handler) GetAllBooks(c echo.Context) error {
-	books, err := h.svc.GetBooks()
+	q := dto.BookQueryParam{}
+	c.Bind(&q)
+
+	books, err := h.svc.GetBooks(q)
 	if err != nil {
 		return errResp(c, 500, "Server error", err)
 	}

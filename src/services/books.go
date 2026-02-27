@@ -3,6 +3,7 @@ package services
 import (
 	"desent/src/dto"
 	"desent/src/entity"
+	"desent/src/utils"
 )
 
 func (s *Service) CreateBook(req dto.BookRequest) (*entity.Book, error) {
@@ -20,11 +21,25 @@ func (s *Service) CreateBook(req dto.BookRequest) (*entity.Book, error) {
 	return &bookData, nil
 }
 
-func (s *Service) GetBooks() ([]entity.Book, error) {
+func (s *Service) GetBooks(q dto.BookQueryParam) ([]entity.Book, error) {
 	db := s.app.DB
 	books := []entity.Book{}
 
-	if err := db.Find(&books).Error; err != nil {
+	prep := db.Model(&entity.Book{})
+	if len(q.Author) > 0 {
+		prep = prep.Where("author LIKE ?", utils.Like(q.Author))
+	}
+
+	if q.Limit > 0 {
+		if q.Page <= 0 {
+			q.Page = 1
+		}
+
+		offset := (q.Page - 1) * q.Limit
+		prep = prep.Offset(offset).Limit(q.Limit)
+	}
+
+	if err := prep.Find(&books).Error; err != nil {
 		return nil, err
 	}
 
