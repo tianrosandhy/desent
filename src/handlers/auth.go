@@ -3,6 +3,8 @@ package handlers
 import (
 	"desent/src/bootstrap"
 	"desent/src/dto"
+	"desent/src/pkg/response"
+	"log"
 	"net/http"
 	"time"
 
@@ -13,12 +15,12 @@ import (
 func (h *Handler) Login(c echo.Context) error {
 	req := dto.LoginRequest{}
 	if err := c.Bind(&req); err != nil {
-		return errResp(c, 400, "Invalid request", err)
+		return response.ErrorResponse("Invalid request", err).Send(c, 400)
 	}
 
 	// hardcoded demo for now
 	if req.Username != "admin" || req.Password != "password" {
-		return errResp(c, 401, "Invalid credentials", nil)
+		return response.ErrorResponse("Invalid credential").Send(c, 401)
 	}
 
 	claims := &dto.JwtCustomClaims{
@@ -33,12 +35,10 @@ func (h *Handler) Login(c echo.Context) error {
 
 	signedToken, err := token.SignedString(bootstrap.JWT_SECRET)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{
-			"error": "could not generate token",
-		})
+		log.Printf("ERR Signed Token : %+v", err)
+		return response.ErrorResponse("Cannot generate token").Send(c, 500)
 	}
 
-	// test case doesnt give any response format, so return as string for now
 	return c.JSON(http.StatusOK, map[string]string{
 		"accessToken": signedToken,
 		"token":       signedToken,

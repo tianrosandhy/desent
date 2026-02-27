@@ -8,23 +8,10 @@ import (
 )
 
 func InitRoutes(e *echo.Echo, app *bootstrap.Application) {
-	e.GET("/", func(c echo.Context) error {
-		return c.JSON(200, map[string]string{
-			"OK": "Hello",
-		})
-	})
-
-	e.GET("/ping", func(c echo.Context) error {
-		return c.JSON(200, map[string]any{
-			"success": true,
-		})
-	})
-
-	e.POST("/echo", func(c echo.Context) error {
-		return c.Stream(200, "application/json", c.Request().Body)
-	})
-
 	h := handlers.NewHandler(app)
+	e.GET("/", h.Index)
+	e.GET("/ping", h.Ping)
+	e.GET("/echo", h.Echo)
 
 	e.POST("/auth/token", h.Login)
 

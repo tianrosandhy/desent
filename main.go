@@ -2,6 +2,7 @@ package main
 
 import (
 	"desent/src/bootstrap"
+	"desent/src/pkg/customvalidator"
 	"desent/src/routes"
 	"errors"
 	"log"
@@ -12,16 +13,14 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 )
 
 func main() {
 	app := bootstrap.NewApplication()
+
 	e := echo.New()
-	e.Validator = &CustomValidator{
-		validator: validator.New(),
-	}
+	e.Validator = customvalidator.NewCustomValidator()
 
 	routes.InitRoutes(e, app)
 
@@ -39,14 +38,6 @@ func main() {
 	if err := e.Start(":9999"); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.Printf("ERR Echo = %+v", err)
 	}
-}
-
-type CustomValidator struct {
-	validator *validator.Validate
-}
-
-func (cv *CustomValidator) Validate(i interface{}) error {
-	return cv.validator.Struct(i)
 }
 
 func waitTimeout(wg *sync.WaitGroup, timeout time.Duration) bool {
