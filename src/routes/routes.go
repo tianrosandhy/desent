@@ -28,4 +28,7 @@ func InitRoutes(e *echo.Echo, app *bootstrap.Application) {
 	e.POST("/books", h.PostBook)
 	e.GET("/books", h.GetAllBooks)
 	e.GET("/books/:id", h.GetSingleBook)
+	e.PUT("/books/:id", h.UpdateSingleBook)
+	e.DELETE("/books/:id", h.DeleteSingleBook)
+
 }

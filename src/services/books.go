@@ -41,3 +41,36 @@ func (s *Service) GetBookById(bookId string) (*entity.Book, error) {
 
 	return &book, nil
 }
+
+func (s *Service) UpdateBookById(id string, request dto.BookRequest) (*entity.Book, error) {
+	db := s.app.DB
+
+	book, err := s.GetBookById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	book.Title = request.Title
+	book.Year = request.Year
+	book.Author = request.Author
+	if err := db.Save(&book).Error; err != nil {
+		return nil, err
+	}
+
+	return book, nil
+}
+
+func (s *Service) DeleteBookById(id string) error {
+	db := s.app.DB
+
+	book, err := s.GetBookById(id)
+	if err != nil {
+		return err
+	}
+
+	if err := db.Unscoped().Model(&entity.Book{}).Delete(&book).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
