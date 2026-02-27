@@ -39,5 +39,8 @@ func (h *Handler) Login(c echo.Context) error {
 	}
 
 	// test case doesnt give any response format, so return as string for now
-	return c.String(http.StatusOK, signedToken)
+	return c.JSON(http.StatusOK, map[string]string{
+		"accessToken": signedToken,
+		"token":       signedToken,
+	})
 }
