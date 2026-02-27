@@ -1,6 +1,10 @@
 package routes
 
-import "github.com/labstack/echo/v4"
+import (
+	"io"
+
+	"github.com/labstack/echo/v4"
+)
 
 func InitRoutes(e *echo.Echo) {
 	e.GET("/", func(c echo.Context) error {
@@ -16,9 +20,7 @@ func InitRoutes(e *echo.Echo) {
 	})
 
 	e.POST("/echo", func(c echo.Context) error {
-		var anyRequest any
-		c.Bind(&anyRequest)
-
-		return c.JSON(200, anyRequest)
+		rawBody, _ := io.ReadAll(c.Request().Body)
+		return c.String(200, string(rawBody))
 	})
 }
