@@ -8,4 +8,10 @@ func InitRoutes(e *echo.Echo) {
 			"OK": "Hello",
 		})
 	})
+
+	e.GET("/ping", func(c echo.Context) error {
+		return c.JSON(200, map[string]any{
+			"success": true,
+		})
+	})
 }
