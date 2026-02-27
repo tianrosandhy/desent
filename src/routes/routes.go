@@ -14,4 +14,11 @@ func InitRoutes(e *echo.Echo) {
 			"success": true,
 		})
 	})
+
+	e.POST("/echo", func(c echo.Context) error {
+		var anyRequest any
+		c.Bind(&anyRequest)
+
+		return c.JSON(200, anyRequest)
+	})
 }
