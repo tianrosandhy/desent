@@ -20,7 +20,7 @@ func (h *Handler) PostBook(c echo.Context) error {
 		return errResp(c, 500, "Server error", err)
 	}
 
-	return c.JSON(200, book)
+	return c.JSON(201, book)
 }
 
 func (h *Handler) GetAllBooks(c echo.Context) error {
